@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Configuración del Spawner")]
-    [SerializeField] private GameObject enemyPrefab; // El enemigo que vamos a crear
+    [SerializeField] private GameObject[] enemyPrefabs;
     [SerializeField] private float spawnRate = 1f; // Tiempo en segundos entre cada aparición
     [SerializeField] private float spawnRadius = 10f; // Distancia a la que aparecen del jugador (fuera de cámara)
 
@@ -38,13 +38,19 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        // 1. Obtenemos una dirección aleatoria (un punto en un círculo)
-        Vector2 randomDirection = Random.insideUnitCircle.normalized;
+        // Si por error la lista está vacía, no hacemos nada para evitar que el juego colapse
+        if (enemyPrefabs.Length == 0) return;
+
+        // 2. Elegimos un número al azar entre 0 y la cantidad de enemigos en la lista
+        int randomIndex = Random.Range(0, enemyPrefabs.Length);
         
-        // 2. Multiplicamos esa dirección por el radio y se la sumamos a la posición del jugador
+        // 3. Seleccionamos el enemigo correspondiente a ese número
+        GameObject enemyToSpawn = enemyPrefabs[randomIndex];
+
+        // 4. Calculamos la posición y lo creamos (igual que antes)
+        Vector2 randomDirection = Random.insideUnitCircle.normalized;
         Vector2 spawnPosition = (Vector2)player.position + (randomDirection * spawnRadius);
 
-        // 3. Creamos al enemigo en esa posición calculada
-        Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+        Instantiate(enemyToSpawn, spawnPosition, Quaternion.identity);
     }
 }
