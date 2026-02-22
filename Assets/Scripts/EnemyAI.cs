@@ -4,32 +4,36 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
-    private enum State {
-        Roaming
-    }
-
-    private State state;
     private EnemyPathfinding enemyPathfinding;
+    public Transform player;
+    public float chaseDistance = 5f;
 
     private void Awake() {
         enemyPathfinding = GetComponent<EnemyPathfinding>();
-        state = State.Roaming;
     }
 
     private void Start() {
-        StartCoroutine(RoamingRoutine());
-    }
-
-    private IEnumerator RoamingRoutine() {
-        while (state == State.Roaming)
-        {
-            Vector2 roamPosition = GetRoamingPosition();
-            enemyPathfinding.MoveTo(roamPosition);
-            yield return new WaitForSeconds(2f);
+        // Al nacer, el enemigo busca automáticamente en el mapa quién tiene la etiqueta "Player"
+        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        
+        if (playerObject != null) {
+            player = playerObject.transform;
+            StartCoroutine(ChasingRoutine()); // Inicia la persecución inmediatamente
+        } else {
+            Debug.LogWarning("¡Cuidado! No se encontró a nadie con el Tag 'Player'.");
         }
     }
 
-    private Vector2 GetRoamingPosition() {
-        return new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized;
+    private IEnumerator ChasingRoutine() {
+        // Ciclo infinito: mientras el jugador exista, lo persigue sin descanso
+        while (player != null)
+        {
+            enemyPathfinding.MoveTo(player.position);
+            
+            // Actualiza la ruta cada 0.2 segundos. 
+            // Esto es súper importante en juegos de oleadas para ahorrar memoria 
+            // cuando tengas 50 o 100 enemigos en pantalla al mismo tiempo.
+            yield return new WaitForSeconds(0.2f); 
+        }
     }
 }
