@@ -279,8 +279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefabs:
   - {fileID: 8127146435275365849, guid: 43b6f590b1f51b842b78ba42e30d54e3, type: 3}
-  - {fileID: 7139227758753167522, guid: 7114e207977fcbb4ebc797d43498800b, type: 3}
-  spawnRate: 1
+  spawnRate: 0.5
   spawnRadius: 10
 --- !u!4 &476095924
 Transform:
@@ -330,7 +329,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 500
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 0

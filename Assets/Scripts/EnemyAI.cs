@@ -5,11 +5,15 @@ using UnityEngine;
 public class EnemyAI : MonoBehaviour
 {
     private EnemyPathfinding enemyPathfinding;
+    private Animator animator;
     public Transform player;
-    public float chaseDistance = 5f;
+
+    [Header("Configuración de Combate")]
+    public float stopDistance = 0.5f; // Distancia a la que deja de correr
 
     private void Awake() {
         enemyPathfinding = GetComponent<EnemyPathfinding>();
+        animator = GetComponent<Animator>(); // Inicializamos el Animator
     }
 
     private void Start() {
@@ -28,11 +32,21 @@ public class EnemyAI : MonoBehaviour
         // Ciclo infinito: mientras el jugador exista, lo persigue sin descanso
         while (player != null)
         {
-            enemyPathfinding.MoveTo(player.position);
+            float distancia = Vector2.Distance(transform.position, player.position);
+
+            if (distancia > stopDistance) 
+            {
+                // ESTADO: CORRIENDO
+                enemyPathfinding.MoveTo(player.position);
+                animator.SetBool("isRunning", true); // <--- ACTIVAR ANIMACIÓN
+            }
+            else 
+            {
+                // ESTADO: IDLE (Llegó al jugador)
+                enemyPathfinding.MoveTo(transform.position); // Se queda donde está
+                animator.SetBool("isRunning", false); // <--- DESACTIVAR ANIMACIÓN
+            }
             
-            // Actualiza la ruta cada 0.2 segundos. 
-            // Esto es súper importante en juegos de oleadas para ahorrar memoria 
-            // cuando tengas 50 o 100 enemigos en pantalla al mismo tiempo.
             yield return new WaitForSeconds(0.2f); 
         }
     }

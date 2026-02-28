@@ -172,6 +172,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6995bacab7ae98c4f97d8615e68150d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  player: {fileID: 0}
+  chaseDistance: 5
 --- !u!114 &8464017711472686428
 MonoBehaviour:
   m_ObjectHideFlags: 0

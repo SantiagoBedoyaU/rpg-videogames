@@ -27,6 +27,18 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         PlayerInput();
+        if (playerControls.Movement.Kick.triggered && movement.sqrMagnitude < 0.01f)
+        {
+            // Esto evita que fuerzas externas muevan al personaje durante el frame inicial
+            rb.linearVelocity = Vector2.zero;
+            myAnimator.SetTrigger("Kick");
+        }
+        if (playerControls.Movement.Punch.triggered && movement.sqrMagnitude < 0.01f)
+        {
+            // Esto evita que fuerzas externas muevan al personaje durante el frame inicial
+            rb.linearVelocity = Vector2.zero;
+            myAnimator.SetTrigger("Punch");
+        }
     }
 
     private void FixedUpdate()
