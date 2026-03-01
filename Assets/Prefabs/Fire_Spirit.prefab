@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   player: {fileID: 0}
-  chaseDistance: 5
+  stopDistance: 0.5
 --- !u!114 &8464017711472686428
 MonoBehaviour:
   m_ObjectHideFlags: 0
