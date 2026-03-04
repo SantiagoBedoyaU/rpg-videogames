@@ -13,6 +13,9 @@ public class EnemyAI : MonoBehaviour
     public float attackCooldown = 1.5f; // Tiempo entre golpes
     private bool isAttacking = false;
 
+    [Header("Vida del Enemigo")]
+    public float health = 100f;
+
     private void Awake() {
         enemyPathfinding = GetComponent<EnemyPathfinding>();
         animator = GetComponent<Animator>(); 
@@ -99,5 +102,19 @@ public class EnemyAI : MonoBehaviour
                 scriptSalud.TakeDamage(10f);
             }
         }
+    }
+
+    public void TakeDamage(float damage) {
+        health -= damage;
+        
+        if (health <= 0) {
+            EnemyDie();
+        }
+    }
+
+    void EnemyDie() {
+        // Aquí puedes poner una animación de muerte si tienes una
+        // animator.SetTrigger("Die"); 
+        Destroy(gameObject); // El enemigo desaparece
     }
 }

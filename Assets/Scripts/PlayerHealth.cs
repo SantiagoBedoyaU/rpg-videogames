@@ -6,6 +6,8 @@ public class PlayerHealth : MonoBehaviour
     [Header("Estadísticas de Vida")]
     public float maxHealth = 100f;
     public float currentHealth;
+    private Animator myAnimator;
+    private PlayerController moveScript;
 
     [Header("Interfaz")]
     public Slider healthSlider; // Arrastra el Slider aquí en el Inspector
@@ -39,9 +41,20 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    void Awake() {
+        myAnimator = GetComponent<Animator>();
+        moveScript = GetComponent<PlayerController>();
+    }
+    
     void Die()
     {
         Debug.Log("Jugador derrotado");
-        // Aquí podrías activar una pantalla de Game Over
+        myAnimator.SetTrigger("Death"); // Asegúrate de que el Trigger en el Animator se llame "Death"
+        
+        // Desactivamos el script de movimiento para que no pueda seguir caminando
+        if (moveScript != null) moveScript.enabled = false;
+        
+        // Opcional: Desactivar el Collider para que los enemigos lo ignoren al morir
+        GetComponent<Collider2D>().enabled = false;
     }
 }

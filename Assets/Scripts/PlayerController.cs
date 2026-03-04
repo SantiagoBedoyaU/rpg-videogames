@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour
     private Animator myAnimator;
     private SpriteRenderer mySpriteRenderer;
 
+    [Header("Configuración de Ataque")]
+    public Transform attackPoint; // Crea un objeto vacío frente al jugador y arrástralo aquí
+    public float attackRange = 0.5f;
+    public LayerMask enemyLayers; // Selecciona la capa "Enemy" en el Inspector
 
     private void Awake()
     {
@@ -27,17 +31,19 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         PlayerInput();
-        if (playerControls.Movement.Kick.triggered && movement.sqrMagnitude < 0.01f)
+        if (playerControls.Movement.Kick.triggered && movement.sqrMagnitude < 0.8f)
         {
             // Esto evita que fuerzas externas muevan al personaje durante el frame inicial
             rb.linearVelocity = Vector2.zero;
             myAnimator.SetTrigger("Kick");
+            PerformAttack(100f);
         }
-        if (playerControls.Movement.Punch.triggered && movement.sqrMagnitude < 0.01f)
+        if (playerControls.Movement.Punch.triggered && movement.sqrMagnitude < 0.8f)
         {
             // Esto evita que fuerzas externas muevan al personaje durante el frame inicial
             rb.linearVelocity = Vector2.zero;
             myAnimator.SetTrigger("Punch");
+            PerformAttack(50f);
         }
     }
 
@@ -70,6 +76,31 @@ public class PlayerController : MonoBehaviour
         {
             mySpriteRenderer.flipX = false; // face right
         }
+    }
+
+    void PerformAttack(float damage) 
+    {
+        // 1. Detectamos qué hay en el círculo de ataque
+        Collider2D[] enemigosGolpeados = Physics2D.OverlapCircleAll(attackPoint.position, 0.5f);
+
+        foreach (Collider2D col in enemigosGolpeados) 
+        {
+            // 2. IMPORTANTE: Aquí declaramos la variable 'scriptEnemigo'
+            EnemyAI scriptEnemigo = col.GetComponent<EnemyAI>();
+            
+            // 3. Verificamos si lo que golpeamos realmente tiene el script de enemigo
+            if (scriptEnemigo != null) 
+            {
+                scriptEnemigo.TakeDamage(damage); 
+                Debug.Log("Le pegaste a un enemigo de la oleada");
+            }
+        }
+    }
+
+    // Para ver el círculo de ataque en el editor de Unity
+    private void OnDrawGizmosSelected() {
+        if (attackPoint == null) return;
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 }
 
