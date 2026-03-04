@@ -113,8 +113,15 @@ public class EnemyAI : MonoBehaviour
     }
 
     void EnemyDie() {
-        // Aquí puedes poner una animación de muerte si tienes una
-        // animator.SetTrigger("Die"); 
-        Destroy(gameObject); // El enemigo desaparece
+        // 1. Detener por completo el comportamiento del enemigo
+        StopAllCoroutines(); // Detiene el ChasingRoutine y AttackRoutine
+        enemyPathfinding.enabled = false; // Deja de moverse
+        GetComponent<Collider2D>().enabled = false; // El jugador ya no chocará con él
+        
+        // 2. Ejecutar la animación
+        animator.SetTrigger("Die"); 
+
+        // 3. Destruir el objeto después de 2 segundos (ajusta según dure tu animación)
+        Destroy(gameObject, 2f);
     }
 }

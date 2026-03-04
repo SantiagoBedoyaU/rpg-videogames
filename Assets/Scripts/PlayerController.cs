@@ -31,14 +31,14 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         PlayerInput();
-        if (playerControls.Movement.Kick.triggered && movement.sqrMagnitude < 0.8f)
+        if (playerControls.Movement.Kick.triggered && movement.sqrMagnitude < 0.1f)
         {
             // Esto evita que fuerzas externas muevan al personaje durante el frame inicial
             rb.linearVelocity = Vector2.zero;
             myAnimator.SetTrigger("Kick");
             PerformAttack(100f);
         }
-        if (playerControls.Movement.Punch.triggered && movement.sqrMagnitude < 0.8f)
+        if (playerControls.Movement.Punch.triggered && movement.sqrMagnitude < 0.1f)
         {
             // Esto evita que fuerzas externas muevan al personaje durante el frame inicial
             rb.linearVelocity = Vector2.zero;
@@ -93,6 +93,8 @@ public class PlayerController : MonoBehaviour
             {
                 scriptEnemigo.TakeDamage(damage); 
                 Debug.Log("Le pegaste a un enemigo de la oleada");
+
+                break; // Sale del bucle inmediatamente después de golpear al primero
             }
         }
     }
