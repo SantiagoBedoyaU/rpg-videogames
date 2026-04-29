@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI; // <--- ¡IMPORTANTE! Necesario para manejar la UI
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -10,7 +10,8 @@ public class PlayerHealth : MonoBehaviour
     private PlayerController moveScript;
 
     [Header("Interfaz")]
-    public Slider healthSlider; // Arrastra el Slider aquí en el Inspector
+    public Slider healthSlider;
+    public GameObject gameOverText; // Arrastra el objeto "Game Over" aquí
 
     void Start()
     {
@@ -49,12 +50,12 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("Jugador derrotado");
-        myAnimator.SetTrigger("Death"); // Asegúrate de que el Trigger en el Animator se llame "Death"
+        myAnimator.SetTrigger("Death");
         
-        // Desactivamos el script de movimiento para que no pueda seguir caminando
         if (moveScript != null) moveScript.enabled = false;
-        
-        // Opcional: Desactivar el Collider para que los enemigos lo ignoren al morir
         GetComponent<Collider2D>().enabled = false;
+
+        // Mostrar el mensaje de Game Over
+        if (gameOverText != null) gameOverText.SetActive(true);
     }
 }

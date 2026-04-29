@@ -6,19 +6,25 @@ public class EnemySpawner : MonoBehaviour
 {
     [Header("Configuración del Spawner")]
     [SerializeField] private GameObject[] enemyPrefabs;
-    [SerializeField] private float spawnRate = 1f; // Tiempo en segundos entre cada aparición
-    [SerializeField] private float spawnRadius = 10f; // Distancia a la que aparecen del jugador (fuera de cámara)
+    [SerializeField] private float spawnRadius = 10f;
+
+    [Header("Configuración de Oleadas")]
+    [SerializeField] private int baseEnemiesPerWave = 5;
+    [SerializeField] private float timeBetweenWaves = 3f;
+    [SerializeField] private int enemyIncreasePerWave = 2;
+    [SerializeField] private float spawnDelayBetweenEnemies = 0.3f;
 
     private Transform player;
+    private int currentWave = 0;
+    private List<GameObject> aliveEnemies = new List<GameObject>();
 
     private void Start()
     {
-        // Buscamos al jugador al inicio, igual que hicimos con la IA del enemigo
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)
         {
             player = playerObject.transform;
-            StartCoroutine(SpawnRoutine()); // Iniciamos la creación de enemigos
+            StartCoroutine(WaveRoutine());
         }
         else
         {
@@ -26,31 +32,55 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private IEnumerator SpawnRoutine()
+    private IEnumerator WaveRoutine()
     {
-        // Mientras el jugador esté vivo, sigue creando enemigos infinitamente
         while (player != null)
         {
-            SpawnEnemy();
-            yield return new WaitForSeconds(spawnRate); // Espera antes de crear el siguiente
+            currentWave++;
+            int enemiesToSpawn = baseEnemiesPerWave + (currentWave - 1) * enemyIncreasePerWave;
+
+            Debug.Log($"¡Oleada {currentWave}! Enemigos: {enemiesToSpawn}");
+
+            for (int i = 0; i < enemiesToSpawn; i++)
+            {
+                SpawnEnemy();
+                yield return new WaitForSeconds(spawnDelayBetweenEnemies);
+            }
+
+            yield return new WaitUntil(() => AreAllEnemiesDead());
+
+            Debug.Log($"¡Oleada {currentWave} completada!");
+            yield return new WaitForSeconds(timeBetweenWaves);
         }
     }
 
     private void SpawnEnemy()
     {
-        // Si por error la lista está vacía, no hacemos nada para evitar que el juego colapse
-        if (enemyPrefabs.Length == 0) return;
+        if (enemyPrefabs.Length == 0 || player == null) return;
 
-        // 2. Elegimos un número al azar entre 0 y la cantidad de enemigos en la lista
         int randomIndex = Random.Range(0, enemyPrefabs.Length);
-        
-        // 3. Seleccionamos el enemigo correspondiente a ese número
         GameObject enemyToSpawn = enemyPrefabs[randomIndex];
 
-        // 4. Calculamos la posición y lo creamos (igual que antes)
         Vector2 randomDirection = Random.insideUnitCircle.normalized;
         Vector2 spawnPosition = (Vector2)player.position + (randomDirection * spawnRadius);
 
-        Instantiate(enemyToSpawn, spawnPosition, Quaternion.identity);
+        GameObject enemy = Instantiate(enemyToSpawn, spawnPosition, Quaternion.identity);
+        aliveEnemies.Add(enemy);
+    }
+
+    private bool AreAllEnemiesDead()
+    {
+        aliveEnemies.RemoveAll(enemy => enemy == null);
+        return aliveEnemies.Count == 0;
+    }
+
+    private void OnGUI()
+    {
+        GUIStyle style = new GUIStyle();
+        style.fontSize = 20;
+        style.normal.textColor = Color.white;
+        style.fontStyle = FontStyle.Bold;
+
+        GUI.Label(new Rect(20, 20, 300, 50), $"Oleada: {currentWave}", style);
     }
 }
