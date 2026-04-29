@@ -28,6 +28,16 @@ public class PlayerController : MonoBehaviour
         playerControls.Enable();
     }
 
+    private void OnDisable()
+    {
+        playerControls.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        playerControls.Disable();
+    }
+
     private void Update()
     {
         PlayerInput();

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -11,17 +12,23 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("Interfaz")]
     public Slider healthSlider;
-    public GameObject gameOverText; // Arrastra el objeto "Game Over" aquí
+    public GameObject gameOverText;
+    public Button restartButton;
 
     void Start()
     {
         currentHealth = maxHealth;
         
-        // Configuramos el Slider con los valores de vida
         if (healthSlider != null)
         {
             healthSlider.maxValue = maxHealth;
             healthSlider.value = currentHealth;
+        }
+
+        if (restartButton != null)
+        {
+            restartButton.gameObject.SetActive(false);
+            restartButton.onClick.AddListener(RestartGame);
         }
     }
 
@@ -29,7 +36,6 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth -= damageAmount;
         
-        // Actualizamos la barra visual
         if (healthSlider != null)
         {
             healthSlider.value = currentHealth;
@@ -55,7 +61,13 @@ public class PlayerHealth : MonoBehaviour
         if (moveScript != null) moveScript.enabled = false;
         GetComponent<Collider2D>().enabled = false;
 
-        // Mostrar el mensaje de Game Over
         if (gameOverText != null) gameOverText.SetActive(true);
+        
+        if (restartButton != null) restartButton.gameObject.SetActive(true);
+    }
+
+    void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
