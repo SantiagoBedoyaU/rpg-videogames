@@ -16,6 +16,9 @@ public class EnemyAI : MonoBehaviour
     [Header("Vida del Enemigo")]
     public float health = 100f;
 
+    [Header("Puntos")]
+    public int scoreValue = 10;
+
     private void Awake() {
         enemyPathfinding = GetComponent<EnemyPathfinding>();
         animator = GetComponent<Animator>(); 
@@ -113,6 +116,11 @@ public class EnemyAI : MonoBehaviour
     }
 
     void EnemyDie() {
+        // Sumar puntos al jugador
+        if (ScoreManager.Instance != null) {
+            ScoreManager.Instance.AddPoints(scoreValue);
+        }
+
         // 1. Detener por completo el comportamiento del enemigo
         StopAllCoroutines(); // Detiene el ChasingRoutine y AttackRoutine
         enemyPathfinding.enabled = false; // Deja de moverse
