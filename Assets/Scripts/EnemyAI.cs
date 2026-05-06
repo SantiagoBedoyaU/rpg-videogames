@@ -11,6 +11,7 @@ public class EnemyAI : MonoBehaviour
     [Header("Configuración de Combate")]
     public float stopDistance = 1.2f; // Distancia para empezar a atacar
     public float attackCooldown = 1.5f; // Tiempo entre golpes
+    public float attackDamage = 10f; // Daño del enemigo
     private bool isAttacking = false;
 
     [Header("Vida del Enemigo")]
@@ -44,13 +45,13 @@ public class EnemyAI : MonoBehaviour
             {
                 // PERSEGUIR
                 enemyPathfinding.MoveTo(player.position);
-                animator.SetBool("isWalking", true); 
+                if (animator != null) animator.SetBool("isWalking", true); 
             }
             else 
             {
                 // DETENERSE Y ATACAR
                 enemyPathfinding.MoveTo(transform.position); // Se queda quieto
-                animator.SetBool("isWalking", false); 
+                if (animator != null) animator.SetBool("isWalking", false); 
 
                 // Si no está en medio de un ataque, inicia uno nuevo
                 if (!isAttacking) {
@@ -102,7 +103,7 @@ public class EnemyAI : MonoBehaviour
 
             if (scriptSalud != null)
             {
-                scriptSalud.TakeDamage(10f);
+                scriptSalud.TakeDamage(attackDamage);
             }
         }
     }
@@ -127,7 +128,9 @@ public class EnemyAI : MonoBehaviour
         GetComponent<Collider2D>().enabled = false; // El jugador ya no chocará con él
         
         // 2. Ejecutar la animación
-        animator.SetTrigger("Die"); 
+        if (animator != null) {
+            animator.SetTrigger("Die");
+        } 
 
         // 3. Destruir el objeto después de 2 segundos (ajusta según dure tu animación)
         Destroy(gameObject, 2f);

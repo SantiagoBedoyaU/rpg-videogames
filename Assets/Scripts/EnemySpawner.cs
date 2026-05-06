@@ -14,6 +14,10 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private int enemyIncreasePerWave = 2;
     [SerializeField] private float spawnDelayBetweenEnemies = 0.3f;
 
+    [Header("Escalado de Dificultad")]
+    [SerializeField] private float damageIncreasePerWave = 2f; // Daño extra por oleada
+    [SerializeField] private float attackCooldownReductionPerWave = 0.1f; // Reducción de cooldown por oleada
+
     private Transform player;
     private int currentWave = 0;
     private List<GameObject> aliveEnemies = new List<GameObject>();
@@ -65,6 +69,15 @@ public class EnemySpawner : MonoBehaviour
         Vector2 spawnPosition = (Vector2)player.position + (randomDirection * spawnRadius);
 
         GameObject enemy = Instantiate(enemyToSpawn, spawnPosition, Quaternion.identity);
+        
+        // Aplicar escalado de dificultad basado en la oleada actual
+        EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
+        if (enemyAI != null)
+        {
+            enemyAI.attackDamage += (currentWave - 1) * damageIncreasePerWave;
+            enemyAI.attackCooldown = Mathf.Max(0.3f, enemyAI.attackCooldown - (currentWave - 1) * attackCooldownReductionPerWave);
+        }
+        
         aliveEnemies.Add(enemy);
     }
 
