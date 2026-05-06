@@ -175,6 +175,8 @@ MonoBehaviour:
   player: {fileID: 0}
   stopDistance: 0.6
   attackCooldown: 1.5
+  health: 100
+  scoreValue: 10
 --- !u!114 &459499021541612511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,6 +190,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
   moveSpeed: 2
+  obstacleCheckRadius: 1
+  raycastDistance: 2
 --- !u!95 &3095909049936985544
 Animator:
   serializedVersion: 7

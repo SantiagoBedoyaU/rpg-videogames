@@ -44,13 +44,13 @@ public class EnemyAI : MonoBehaviour
             {
                 // PERSEGUIR
                 enemyPathfinding.MoveTo(player.position);
-                animator.SetBool("isRunning", true); 
+                animator.SetBool("isWalking", true); 
             }
             else 
             {
                 // DETENERSE Y ATACAR
                 enemyPathfinding.MoveTo(transform.position); // Se queda quieto
-                animator.SetBool("isRunning", false); 
+                animator.SetBool("isWalking", false); 
 
                 // Si no está en medio de un ataque, inicia uno nuevo
                 if (!isAttacking) {
