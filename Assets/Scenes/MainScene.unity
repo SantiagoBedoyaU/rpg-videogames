@@ -1876,12 +1876,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefabs:
   - {fileID: 8127146435275365849, guid: 43b6f590b1f51b842b78ba42e30d54e3, type: 3}
-  - {fileID: 7139227758753167522, guid: 7114e207977fcbb4ebc797d43498800b, type: 3}
+  - {fileID: 1714668762016533699, guid: bcfaced62dc87ac4ca3464c2723e9d9d, type: 3}
   spawnRadius: 10
   baseEnemiesPerWave: 5
   timeBetweenWaves: 3
   enemyIncreasePerWave: 2
   spawnDelayBetweenEnemies: 0.3
+  damageIncreasePerWave: 2
+  attackCooldownReductionPerWave: 0.1
 --- !u!4 &476095924
 Transform:
   m_ObjectHideFlags: 0

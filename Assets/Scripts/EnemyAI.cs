@@ -14,9 +14,11 @@ public class EnemyAI : MonoBehaviour
     public float attackDamage = 10f; // Daño del enemigo
     private bool isAttacking = false;
 
+    private bool isDead = false;
+
     [Header("Vida del Enemigo")]
     public float health = 100f;
-
+    [SerializeField] private GameObject deathParticlePrefab;
     [Header("Puntos")]
     public int scoreValue = 10;
 
@@ -109,6 +111,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     public void TakeDamage(float damage) {
+        if (isDead) return;
         health -= damage;
         
         if (health <= 0) {
@@ -117,6 +120,8 @@ public class EnemyAI : MonoBehaviour
     }
 
     void EnemyDie() {
+        if (isDead) return;
+        isDead = true;
         // Sumar puntos al jugador
         if (ScoreManager.Instance != null) {
             ScoreManager.Instance.AddPoints(scoreValue);
@@ -130,7 +135,22 @@ public class EnemyAI : MonoBehaviour
         // 2. Ejecutar la animación
         if (animator != null) {
             animator.SetTrigger("Die");
-        } 
+        }
+
+       if (deathParticlePrefab != null)
+        {
+            GameObject particles = Instantiate(deathParticlePrefab, transform.position, Quaternion.identity);
+            foreach (var ps in particles.GetComponentsInChildren<ParticleSystem>())
+            {
+                var main = ps.main;
+                main.startSizeMultiplier = 0.3f;
+                main.startSpeedMultiplier = 0.3f;
+                var shape = ps.shape;
+                shape.radius *= 0.3f;
+            }
+            float duration = particles.GetComponent<ParticleSystem>().main.duration;
+            Destroy(particles, duration + 0.5f);
+        }
 
         // 3. Destruir el objeto después de 2 segundos (ajusta según dure tu animación)
         Destroy(gameObject, 2f);
