@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.UI; // <--- ¡IMPORTANTE! Necesario para manejar la UI
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -10,17 +11,24 @@ public class PlayerHealth : MonoBehaviour
     private PlayerController moveScript;
 
     [Header("Interfaz")]
-    public Slider healthSlider; // Arrastra el Slider aquí en el Inspector
+    public Slider healthSlider;
+    public GameObject gameOverText;
+    public Button restartButton;
 
     void Start()
     {
         currentHealth = maxHealth;
         
-        // Configuramos el Slider con los valores de vida
         if (healthSlider != null)
         {
             healthSlider.maxValue = maxHealth;
             healthSlider.value = currentHealth;
+        }
+
+        if (restartButton != null)
+        {
+            restartButton.gameObject.SetActive(false);
+            restartButton.onClick.AddListener(RestartGame);
         }
     }
 
@@ -28,7 +36,6 @@ public class PlayerHealth : MonoBehaviour
     {
         currentHealth -= damageAmount;
         
-        // Actualizamos la barra visual
         if (healthSlider != null)
         {
             healthSlider.value = currentHealth;
@@ -49,12 +56,18 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("Jugador derrotado");
-        myAnimator.SetTrigger("Death"); // Asegúrate de que el Trigger en el Animator se llame "Death"
+        myAnimator.SetTrigger("Death");
         
-        // Desactivamos el script de movimiento para que no pueda seguir caminando
         if (moveScript != null) moveScript.enabled = false;
-        
-        // Opcional: Desactivar el Collider para que los enemigos lo ignoren al morir
         GetComponent<Collider2D>().enabled = false;
+
+        if (gameOverText != null) gameOverText.SetActive(true);
+        
+        if (restartButton != null) restartButton.gameObject.SetActive(true);
+    }
+
+    void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
