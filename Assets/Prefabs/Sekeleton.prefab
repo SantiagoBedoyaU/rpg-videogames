@@ -175,7 +175,7 @@ MonoBehaviour:
   player: {fileID: 0}
   stopDistance: 0.6
   attackCooldown: 1.5
-  attackDamage: 10
+  attackDamage: 3
   health: 100
   deathParticlePrefab: {fileID: 366670812691122592, guid: 623ea49a95415534aaecfeef3bc40212, type: 3}
   scoreValue: 10

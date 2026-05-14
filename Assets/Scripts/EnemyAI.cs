@@ -137,22 +137,11 @@ public class EnemyAI : MonoBehaviour
             animator.SetTrigger("Die");
         }
 
-       if (deathParticlePrefab != null)
+        if (deathParticlePrefab != null)
         {
-            GameObject particles = Instantiate(deathParticlePrefab, transform.position, Quaternion.identity);
-            foreach (var ps in particles.GetComponentsInChildren<ParticleSystem>())
-            {
-                var main = ps.main;
-                main.startSizeMultiplier = 0.3f;
-                main.startSpeedMultiplier = 0.3f;
-                var shape = ps.shape;
-                shape.radius *= 0.3f;
-            }
-            float duration = particles.GetComponent<ParticleSystem>().main.duration;
-            Destroy(particles, duration + 0.5f);
+            Instantiate(deathParticlePrefab, transform.position, Quaternion.identity);
         }
 
-        // 3. Destruir el objeto después de 2 segundos (ajusta según dure tu animación)
-        Destroy(gameObject, 2f);
+        Destroy(gameObject);
     }
 }

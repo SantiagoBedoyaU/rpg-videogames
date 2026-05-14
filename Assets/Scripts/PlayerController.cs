@@ -90,21 +90,22 @@ public class PlayerController : MonoBehaviour
 
     void PerformAttack(float damage) 
     {
-        // 1. Detectamos qué hay en el círculo de ataque
         Collider2D[] enemigosGolpeados = Physics2D.OverlapCircleAll(attackPoint.position, 0.5f);
 
         foreach (Collider2D col in enemigosGolpeados) 
         {
-            // 2. IMPORTANTE: Aquí declaramos la variable 'scriptEnemigo'
-            EnemyAI scriptEnemigo = col.GetComponent<EnemyAI>();
-            
-            // 3. Verificamos si lo que golpeamos realmente tiene el script de enemigo
-            if (scriptEnemigo != null) 
+            EnemyAI enemyAI = col.GetComponent<EnemyAI>();
+            if (enemyAI != null) 
             {
-                scriptEnemigo.TakeDamage(damage); 
-                Debug.Log("Le pegaste a un enemigo de la oleada");
+                enemyAI.TakeDamage(damage); 
+                break;
+            }
 
-                break; // Sale del bucle inmediatamente después de golpear al primero
+            BossAI bossAI = col.GetComponent<BossAI>();
+            if (bossAI != null) 
+            {
+                bossAI.TakeDamage(damage); 
+                break;
             }
         }
     }

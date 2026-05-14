@@ -15,4 +15,6 @@
 - `PlayerHealth.cs`: Player health, UI health slider, death handling.
 - `EnemyAI.cs`: Enemy chase, attack, death logic.
 - `EnemyPathfinding.cs`: Basic enemy movement.
-- `EnemySpawner.cs`: Periodic enemy spawning near the player.
+- `EnemySpawner.cs`: Periodic enemy spawning near the player. Boss spawns every 5 waves via `bossPrefab` field.
+- `BossAI.cs`: Dark Knight boss AI. Controls `DarkKnightController` (from the asset). 500 HP, 30 damage, 200 score, uses Run/Guard/Attack/Hurt/Death animations.
+- `ScoreManager.cs`: Singleton score tracking with TMP UI display.

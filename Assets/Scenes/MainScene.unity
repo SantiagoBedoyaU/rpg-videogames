@@ -1884,6 +1884,9 @@ MonoBehaviour:
   spawnDelayBetweenEnemies: 0.3
   damageIncreasePerWave: 2
   attackCooldownReductionPerWave: 0.1
+  bossPrefab: {fileID: 858684623655962863, guid: 42f3cb3cd6c28a74faa2a08febc529ac, type: 3}
+  bossFirstWave: 5
+  bossWaveInterval: 5
 --- !u!4 &476095924
 Transform:
   m_ObjectHideFlags: 0
@@ -2187,7 +2190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4332825cf5949d94f98ea5a0c748a166, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHealth: 100
+  maxHealth: 500
   currentHealth: 0
   healthSlider: {fileID: 364168890}
   gameOverText: {fileID: 231780448}

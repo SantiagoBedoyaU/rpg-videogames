@@ -18,6 +18,11 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float damageIncreasePerWave = 2f; // Daño extra por oleada
     [SerializeField] private float attackCooldownReductionPerWave = 0.1f; // Reducción de cooldown por oleada
 
+    [Header("Configuración del Jefe Final")]
+    [SerializeField] private GameObject bossPrefab;
+    [SerializeField] private int bossFirstWave = 5;
+    [SerializeField] private int bossWaveInterval = 5;
+
     private Transform player;
     private int currentWave = 0;
     private List<GameObject> aliveEnemies = new List<GameObject>();
@@ -43,12 +48,27 @@ public class EnemySpawner : MonoBehaviour
             currentWave++;
             int enemiesToSpawn = baseEnemiesPerWave + (currentWave - 1) * enemyIncreasePerWave;
 
-            Debug.Log($"¡Oleada {currentWave}! Enemigos: {enemiesToSpawn}");
+            bool isBossWave = bossPrefab != null && currentWave >= bossFirstWave && currentWave % bossWaveInterval == 0;
 
-            for (int i = 0; i < enemiesToSpawn; i++)
+            if (isBossWave)
             {
-                SpawnEnemy();
-                yield return new WaitForSeconds(spawnDelayBetweenEnemies);
+                Debug.Log($"¡OLEADA {currentWave} - JEFE! ¡Ha aparecido el Dark Knight!");
+                SpawnBoss();
+                int bossWaveEnemies = Mathf.Max(1, enemiesToSpawn / 2);
+                for (int i = 0; i < bossWaveEnemies; i++)
+                {
+                    SpawnEnemy();
+                    yield return new WaitForSeconds(spawnDelayBetweenEnemies);
+                }
+            }
+            else
+            {
+                Debug.Log($"¡Oleada {currentWave}! Enemigos: {enemiesToSpawn}");
+                for (int i = 0; i < enemiesToSpawn; i++)
+                {
+                    SpawnEnemy();
+                    yield return new WaitForSeconds(spawnDelayBetweenEnemies);
+                }
             }
 
             yield return new WaitUntil(() => AreAllEnemiesDead());
@@ -79,6 +99,17 @@ public class EnemySpawner : MonoBehaviour
         }
         
         aliveEnemies.Add(enemy);
+    }
+
+    private void SpawnBoss()
+    {
+        if (bossPrefab == null || player == null) return;
+
+        Vector2 randomDirection = Random.insideUnitCircle.normalized;
+        Vector2 spawnPosition = (Vector2)player.position + (randomDirection * spawnRadius);
+
+        GameObject boss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity);
+        aliveEnemies.Add(boss);
     }
 
     private bool AreAllEnemiesDead()
