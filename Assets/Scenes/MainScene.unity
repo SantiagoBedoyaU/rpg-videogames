@@ -1887,6 +1887,9 @@ MonoBehaviour:
   bossPrefab: {fileID: 858684623655962863, guid: 42f3cb3cd6c28a74faa2a08febc529ac, type: 3}
   bossFirstWave: 5
   bossWaveInterval: 5
+  healthPickupPrefab: {fileID: 1976885430638207793, guid: ac62011abcd77af4281198aa51fc33d1, type: 3}
+  healthPickupWaveInterval: 3
+  healthPickupSpawnRadius: 20
 --- !u!4 &476095924
 Transform:
   m_ObjectHideFlags: 0

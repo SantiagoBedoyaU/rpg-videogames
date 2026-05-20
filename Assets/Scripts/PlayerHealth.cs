@@ -53,6 +53,13 @@ public class PlayerHealth : MonoBehaviour
         moveScript = GetComponent<PlayerController>();
     }
     
+    public void HealToFull()
+    {
+        currentHealth = maxHealth;
+        if (healthSlider != null)
+            healthSlider.value = currentHealth;
+    }
+
     void Die()
     {
         Debug.Log("Jugador derrotado");

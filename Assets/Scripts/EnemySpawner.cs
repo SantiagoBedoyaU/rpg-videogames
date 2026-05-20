@@ -23,12 +23,25 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private int bossFirstWave = 5;
     [SerializeField] private int bossWaveInterval = 5;
 
+    [Header("Power-ups")]
+    [SerializeField] private GameObject healthPickupPrefab;
+    [SerializeField] private int healthPickupWaveInterval = 3;
+    [SerializeField] private float healthPickupSpawnRadius = 20f;
+
     private Transform player;
     private int currentWave = 0;
     private List<GameObject> aliveEnemies = new List<GameObject>();
+    private float difficultyDamageMult = 1f;
+    private float difficultyWaveScalingMult = 1f;
 
     private void Start()
     {
+        if (GameManager.Instance != null)
+        {
+            difficultyDamageMult = GameManager.Instance.GetDamageMultiplier();
+            difficultyWaveScalingMult = GameManager.Instance.GetWaveScalingMultiplier();
+        }
+
         GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)
         {
@@ -46,6 +59,8 @@ public class EnemySpawner : MonoBehaviour
         while (player != null)
         {
             currentWave++;
+            if (GameManager.Instance != null)
+                GameManager.Instance.currentWave = currentWave;
             int enemiesToSpawn = baseEnemiesPerWave + (currentWave - 1) * enemyIncreasePerWave;
 
             bool isBossWave = bossPrefab != null && currentWave >= bossFirstWave && currentWave % bossWaveInterval == 0;
@@ -74,6 +89,12 @@ public class EnemySpawner : MonoBehaviour
             yield return new WaitUntil(() => AreAllEnemiesDead());
 
             Debug.Log($"¡Oleada {currentWave} completada!");
+
+            if (currentWave % healthPickupWaveInterval == 0 && healthPickupPrefab != null)
+            {
+                SpawnHealthPickup();
+            }
+
             yield return new WaitForSeconds(timeBetweenWaves);
         }
     }
@@ -90,11 +111,11 @@ public class EnemySpawner : MonoBehaviour
 
         GameObject enemy = Instantiate(enemyToSpawn, spawnPosition, Quaternion.identity);
         
-        // Aplicar escalado de dificultad basado en la oleada actual
+        // Aplicar escalado de dificultad basado en la oleada actual y dificultad elegida
         EnemyAI enemyAI = enemy.GetComponent<EnemyAI>();
         if (enemyAI != null)
         {
-            enemyAI.attackDamage += (currentWave - 1) * damageIncreasePerWave;
+            enemyAI.attackDamage = enemyAI.attackDamage * difficultyDamageMult + (currentWave - 1) * damageIncreasePerWave * difficultyWaveScalingMult;
             enemyAI.attackCooldown = Mathf.Max(0.3f, enemyAI.attackCooldown - (currentWave - 1) * attackCooldownReductionPerWave);
         }
         
@@ -109,7 +130,24 @@ public class EnemySpawner : MonoBehaviour
         Vector2 spawnPosition = (Vector2)player.position + (randomDirection * spawnRadius);
 
         GameObject boss = Instantiate(bossPrefab, spawnPosition, Quaternion.identity);
+
+        // Aplicar escalado de dificultad al jefe
+        BossAI bossAI = boss.GetComponent<BossAI>();
+        if (bossAI != null)
+        {
+            bossAI.attackDamage = bossAI.attackDamage * difficultyDamageMult + (currentWave - 1) * damageIncreasePerWave * difficultyWaveScalingMult;
+        }
+
         aliveEnemies.Add(boss);
+    }
+
+    private void SpawnHealthPickup()
+    {
+        Vector2 randomDirection = Random.insideUnitCircle.normalized;
+        float randomDistance = Random.Range(3f, 7f);
+        Vector2 spawnPosition = (Vector2)player.position + (randomDirection * randomDistance);
+
+        Instantiate(healthPickupPrefab, spawnPosition, Quaternion.identity);
     }
 
     private bool AreAllEnemiesDead()
