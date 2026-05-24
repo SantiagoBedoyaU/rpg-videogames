@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 
     public Difficulty selectedDifficulty = Difficulty.Normal;
     public int currentWave = 0;
+    public string playerName = "";
 
     private void Awake()
     {

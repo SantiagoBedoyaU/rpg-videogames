@@ -48,6 +48,8 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    private bool isDead = false;
+
     void Awake() {
         myAnimator = GetComponent<Animator>();
         moveScript = GetComponent<PlayerController>();
@@ -62,6 +64,9 @@ public class PlayerHealth : MonoBehaviour
 
     void Die()
     {
+        if (isDead) return;
+        isDead = true;
+
         Debug.Log("Jugador derrotado");
         myAnimator.SetTrigger("Death");
         
@@ -71,6 +76,9 @@ public class PlayerHealth : MonoBehaviour
         if (gameOverText != null) gameOverText.SetActive(true);
         
         if (restartButton != null) restartButton.gameObject.SetActive(true);
+
+        if (ScoreManager.Instance != null)
+            ScoreManager.Instance.SendScoreToAPI();
     }
 
     void RestartGame()
