@@ -80,9 +80,9 @@ public class MainMenu : MonoBehaviour
 
         string desc = difficulty switch
         {
-            Difficulty.Easy => "Enemigos más débiles y oleadas con escalado de daño reducido.",
-            Difficulty.Normal => "Dificultad equilibrada con escalado de daño estándar.",
-            Difficulty.Hard => "Enemigos más fuertes y oleadas con escalado de daño agresivo.",
+            Difficulty.Easy => "<color=#4a9e6f>Fácil</color> · Enemigos más débiles y oleadas con escalado de daño reducido.",
+            Difficulty.Normal => "<color=#c9a84c>Normal</color> · Dificultad equilibrada con escalado de daño estándar.",
+            Difficulty.Hard => "<color=#c0392b>Difícil</color> · Enemigos más fuertes y oleadas con escalado de daño agresivo.",
             _ => "",
         };
         difficultyDescriptionText.text = desc;
@@ -95,7 +95,7 @@ public class MainMenu : MonoBehaviour
         if (string.IsNullOrEmpty(name))
         {
             if (nameInputField != null)
-                nameInputField.image.color = Color.red;
+                nameInputField.image.color = new Color(0.545f, 0, 0, 1);
             return;
         }
 
@@ -143,10 +143,11 @@ public class MainMenu : MonoBehaviour
                 {
                     System.Array.Sort(list.items, (a, b) => b.points.CompareTo(a.points));
 
-                    string display = "<b>Rankings</b>\n";
+                    string display = "<color=#ffd700><size=32><b>RANKINGS</b></size></color>\n<color=#665533>━━━━━━━━━━━━━━</color>\n";
                     for (int i = 0; i < list.items.Length; i++)
                     {
-                        display += $"{i + 1}. {list.items[i].name} - {list.items[i].points} pts\n";
+                        string medal = i == 0 ? "<color=#ffd700>#1</color>" : i == 1 ? "<color=#c0c0c0>#2</color>" : i == 2 ? "<color=#cd7f32>#3</color>" : $"<color=#998866>#{i + 1}</color>";
+                        display += $"{medal} <color=#e6d9a8>{list.items[i].name}</color> <color=#ffd700>-</color> <color=#f0e6d3>{list.items[i].points} pts</color>\n";
                     }
                     if (leaderboardText != null)
                         leaderboardText.text = display;
