@@ -172,6 +172,9 @@ public class BossAI : MonoBehaviour
             }
         }
 
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.explosionSound);
+
         Destroy(gameObject);
     }
 

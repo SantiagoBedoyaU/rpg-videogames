@@ -21,6 +21,11 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
         mySpriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (FindFirstObjectByType<PauseMenu>() == null)
+        {
+            new GameObject("PauseMenu", typeof(PauseMenu));
+        }
     }
 
     private void OnEnable()
@@ -91,6 +96,7 @@ public class PlayerController : MonoBehaviour
     void PerformAttack(float damage) 
     {
         Collider2D[] enemigosGolpeados = Physics2D.OverlapCircleAll(attackPoint.position, 0.5f);
+        bool hit = false;
 
         foreach (Collider2D col in enemigosGolpeados) 
         {
@@ -98,6 +104,7 @@ public class PlayerController : MonoBehaviour
             if (enemyAI != null) 
             {
                 enemyAI.TakeDamage(damage); 
+                hit = true;
                 break;
             }
 
@@ -105,9 +112,13 @@ public class PlayerController : MonoBehaviour
             if (bossAI != null) 
             {
                 bossAI.TakeDamage(damage); 
+                hit = true;
                 break;
             }
         }
+
+        if (hit && AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.hitSound);
     }
 
     // Para ver el círculo de ataque en el editor de Unity

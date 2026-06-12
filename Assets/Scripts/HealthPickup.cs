@@ -61,6 +61,8 @@ public class HealthPickup : MonoBehaviour
         if (playerHealth != null)
         {
             playerHealth.HealToFull();
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.pickupSound);
             Destroy(gameObject);
         }
     }

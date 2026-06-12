@@ -25,17 +25,67 @@ public class MainMenu : MonoBehaviour
     [Header("Rankings")]
     [SerializeField] private TextMeshProUGUI leaderboardText;
 
+    [Header("Créditos")]
+    [SerializeField] private TextMeshProUGUI creditsText;
+
     private Difficulty selectedDifficulty = Difficulty.Normal;
 
     private void Start()
     {
         SelectDifficulty(Difficulty.Normal);
         StartCoroutine(FetchLeaderboard());
+        ShowCredits();
 
         easyButton.onClick.AddListener(() => SelectDifficulty(Difficulty.Easy));
         normalButton.onClick.AddListener(() => SelectDifficulty(Difficulty.Normal));
         hardButton.onClick.AddListener(() => SelectDifficulty(Difficulty.Hard));
         playButton.onClick.AddListener(StartGame);
+    }
+
+    private void ShowCredits()
+    {
+        string creditos = "Desarrollado por: Juan Manuel Figueroa · Esteban Ochoa · Santiago Bedoya";
+
+        if (creditsText != null)
+        {
+            creditsText.text = creditos;
+            creditsText.fontSize = 16;
+            creditsText.alignment = TextAlignmentOptions.Bottom;
+            creditsText.color = new Color(0.7f, 0.7f, 0.75f);
+            RectTransform rt = creditsText.rectTransform;
+            rt.anchorMin = new Vector2(0.5f, 0f);
+            rt.anchorMax = new Vector2(0.5f, 0f);
+            rt.pivot = new Vector2(0.5f, 0f);
+            rt.anchoredPosition = new Vector2(0, 20);
+            return;
+        }
+
+        GameObject canvasObj = GameObject.Find("Canvas");
+        Canvas canvas = canvasObj != null ? canvasObj.GetComponent<Canvas>() : null;
+        if (canvas == null)
+        {
+            canvasObj = new GameObject("CreditsCanvas");
+            canvas = canvasObj.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvasObj.AddComponent<UnityEngine.UI.CanvasScaler>();
+            canvasObj.AddComponent<UnityEngine.UI.GraphicRaycaster>();
+        }
+
+        GameObject go = new GameObject("CreditsText");
+        go.transform.SetParent(canvas.transform, false);
+        Text txt = go.AddComponent<Text>();
+        txt.text = creditos;
+        txt.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        txt.fontSize = 16;
+        txt.fontStyle = FontStyle.Italic;
+        txt.color = new Color(0.65f, 0.65f, 0.7f, 0.9f);
+        txt.alignment = TextAnchor.LowerCenter;
+        RectTransform r = go.GetComponent<RectTransform>();
+        r.anchorMin = new Vector2(0.5f, 0f);
+        r.anchorMax = new Vector2(0.5f, 0f);
+        r.pivot = new Vector2(0.5f, 0f);
+        r.anchoredPosition = new Vector2(0, 20);
+        r.sizeDelta = new Vector2(600, 40);
     }
 
     private void SelectDifficulty(Difficulty difficulty)

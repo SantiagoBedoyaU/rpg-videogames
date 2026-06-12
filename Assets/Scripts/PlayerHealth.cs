@@ -41,6 +41,9 @@ public class PlayerHealth : MonoBehaviour
             healthSlider.value = currentHealth;
         }
 
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.painSound);
+
         if (currentHealth <= 0)
         {
             currentHealth = 0;
