@@ -71,6 +71,10 @@ public class PlayerHealth : MonoBehaviour
         isDead = true;
 
         Debug.Log("Jugador derrotado");
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.deathSound);
+
         myAnimator.SetTrigger("Death");
         
         if (moveScript != null) moveScript.enabled = false;

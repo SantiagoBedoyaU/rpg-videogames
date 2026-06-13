@@ -22,6 +22,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip painSound;
     public AudioClip explosionSound;
     public AudioClip pickupSound;
+    public AudioClip deathSound;
 
     private Coroutine fadeRoutine;
 

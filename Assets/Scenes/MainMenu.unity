@@ -2468,6 +2468,7 @@ MonoBehaviour:
   painSound: {fileID: 8300000, guid: 2d3304e0cc5b17b48a6eab65a248a5a8, type: 3}
   explosionSound: {fileID: 8300000, guid: 9c9975d5863339d4b9a598e034919cf7, type: 3}
   pickupSound: {fileID: 8300000, guid: facdd5ced48ba194dafaf2fff3b38c2d, type: 3}
+  deathSound: {fileID: 8300000, guid: befcd747d38c82548b7206d237b23ef1, type: 3}
 --- !u!4 &1683059086
 Transform:
   m_ObjectHideFlags: 0
